@@ -1,26 +1,31 @@
 # refraction_photon_mass
 Simple but accurate visible frequency refraction program
 
+Write up on the theory here:
+
+https://mystry-geek.blogspot.com/2025/03/a-worldline-based-approach-to.html
 
 The material has a scaling factor, permittivity, and permeability.
 This gives a simple refraction index.
 All of that is multiplied by a factor adjusted by the frequency of the photon.
- 
 This gives the refraction that can then be converted to an angle.
+
+What this means is that refraction is something a photon does as it changes speed in a medium.
+The medium just sets the speed of light.
+
 
 It is just that simple.
 
 
 ||
-|Wavelength:  nm|
-|  Empirical Refractive Index (n2): |
-|  Predicted Refractive Index (n_pre): |
-|  Refractive Index % Difference: %|
-|  Snell's Law Angle (empirical): degrees|
-|  Snell's Law Angle (predicted): degrees|
-|  Angle % Difference: %|
+|Wavelength  nm|
+|Empirical Refractive Index (n2) |
+|Predicted Refractive Index (n_pre) |
+|Refractive Index % Difference %|
+|Snell's Law Angle (empirical) degrees|
+|Snell's Law Angle (predicted) degrees|
+|Angle % Difference %|
 |--------------------------------------------------|
-|                                                  |
 ||
 |Material: water|
 |380  nm 1.3330 1.3356 0.1930% 2.2508 2.2464 0.1931%|
