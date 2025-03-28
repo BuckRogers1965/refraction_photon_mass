@@ -21,7 +21,10 @@ materials_properties = {
     "crown glass": {"permittivity": 7.0, "permeability": 1.0},
     "flint glass": {"permittivity": 7.4, "permeability": 1.0},
     "diamond": {"permittivity": 5.7, "permeability": 0.999992},
-    "fused silica": {"permittivity": 3.82, "permeability": 1.0}
+    "fused silica": {"permittivity": 3.82, "permeability": 1.0},
+    "Acrylic (PMMA)": {"permittivity": 3.0, "permeability": 1.0},
+    "Polycarbonate": {"permittivity": 2.95, "permeability": 1.0},
+    "Sapphire (Al2O3)": {"permittivity": 9.4, "permeability": 1.0},
 }
 
 # Empirical refractive indices
@@ -35,7 +38,10 @@ materials_refractive_index = {
     "gallium arsenide": [ 1, 1, 1, 3.8850, 3.8740, 3.8610, 3.8500, 3.8390, 1, 1, 1 ],
     "fused silica": [ 1, 1, 1, 1.4580, 1.4570, 1.4550, 1.4540, 1.4530, 1, 1, 1 ],
     "barium titanate": [ 1, 1, 1, 2.4130, 2.4060, 2.3970, 2.3910, 2.3840, 1,1,1 ],
-    "lithium niobate": [ 1, 1, 1, 2.2360, 2.2290, 2.2190, 2.2130, 2.2060, 1,1,1 ]
+    "lithium niobate": [ 1, 1, 1, 2.2360, 2.2290, 2.2190, 2.2130, 2.2060, 1,1,1 ],
+    "Acrylic (PMMA)":   [ 1, 1, 1, 1.508, 1.496, 1.491, 1.488, 1.486, 1, 1, 1 ],
+    "Polycarbonate":    [ 1, 1, 1, 1.62, 1.596, 1.584, 1.577, 1.573, 1, 1, 1 ],
+    "Sapphire (Al2O3)": [ 1, 1, 1, 1.788, 1.775, 1.769, 1.764, 1.760, 1, 1, 1 ],
 }
 
 
@@ -51,6 +57,9 @@ scaling_factors = {
     "fused silica": 0.7417,
     "barium titanate": 0.0498,
     "lithium niobate": 0.4178,
+    "Acrylic (PMMA)": 0.8577,
+    "Polycarbonate": 0.9189,
+    "Sapphire (Al2O3)": 0.5749,
 }
 
 def speed_of_light_in_material(permittivity_r, permeability_r):
@@ -92,13 +101,15 @@ def adjust_for_frequency(n_predicted, wavelength):
    
     # Apply both energy and wavelength scaling
     return n_predicted * wavelength_factor * energy_factor
-    
-
 
 def calculate_percent_difference(observed, predicted):
     return abs(observed - predicted) / max(observed, predicted)* 100
 
 def main():
+
+    count = 0
+    total_error = 0
+
     print(f"Wavelength:  nm")
     print(f"  Empirical Refractive Index (n2): ")
     print(f"  Predicted Refractive Index (n_pre): ")
@@ -122,19 +133,26 @@ def main():
             n_predicted = adjust_for_frequency(n_predicted_base, wavelength)
             
             # Apply the scaling factor
-            n_predicted_scaled = n_predicted * scaling_factors[material]
+            n_predicted_scaled = n_predicted * scaling_factors[material] 
             
             theta2_empirical = snell_law(1.0003, n2_empirical, theta1)
             theta2_empirical_deg = np.degrees(theta2_empirical)
             
             theta2_predicted = snell_law(1.0003, n_predicted_scaled, theta1)
-            theta2_predicted_deg = np.degrees(theta2_predicted)
+            theta2_predicted_deg = np.degrees(theta2_predicted) 
             
             # Calculate percentage differences
             n_percent_diff = calculate_percent_difference(n2_empirical, n_predicted_scaled)
             angle_percent_diff = calculate_percent_difference(theta2_empirical_deg, theta2_predicted_deg)
+
+            total_error += angle_percent_diff
+            count += 1
             
             print(f"{wavelength:<4} nm {n2_empirical:.4f} {n_predicted_scaled:.4f} {n_percent_diff:.4f}% {theta2_empirical_deg:.4f} {theta2_predicted_deg:.4f} {angle_percent_diff:.4f}%")
+
+    print()
+    print(f"Average Error: {total_error/count:.4f}%")
+    print()
 
 def main_():
     # Initialize the scaling factors dictionary
